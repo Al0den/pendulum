@@ -11,7 +11,8 @@ SRCS = $(wildcard src/*.cpp) $(shell find third-party -name "*.cpp")
 OBJS = $(SRCS:.cpp=.o)
 
 build:
-	git submodule update --init --recursive
+	git clone https://github.com/Al0den/physics third-party/physics
+	git clone https://github.com/Al0den/neat third-party/neat
 
 all: $(TARGET)
 test: $(TEST)
