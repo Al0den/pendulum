@@ -6,17 +6,17 @@ TARGET = Pendulum
 TEST = ./build/test.out
 TRAIN = ./build/train.out
 DEBUG = ./build/debug.out
+THIRD-PARTY = third-party
 
 SRCS = $(wildcard src/*.cpp) $(shell find third-party -name "*.cpp")
 OBJS = $(SRCS:.cpp=.o)
 
-build:
-	git clone https://github.com/Al0den/physics third-party/physics
-	git clone https://github.com/Al0den/neat third-party/neat
+all: $(THIRD-PARTY) $(TARGET)
+	make $(TARGET)
 
-all: $(TARGET)
 test: $(TEST)
 	$(TEST)
+
 train: $(TRAIN)
 	$(TRAIN)
 debug: $(DEBUG)
@@ -30,7 +30,7 @@ $(TARGET): $(OBJS)
 $(TEST): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) mains/test.cpp $(LDFLAGS) -o ./build/test.out
 
-$(TRAIN): $(OBJS)
+$(TRAIN): $(OBJS) 
 	$(CXX) $(CXXFLAGS) $(OBJS) mains/train.cpp $(LDFLAGS) -o ./build/train.out
 
 $(DEBUG): $(OBJS)
@@ -40,6 +40,11 @@ train_debug: $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) mains/train.cpp $(LDFLAGS) -o ./build/train.out
 
 clean:
-	rm -rf $(OBJS) $(TARGET) ./build/*.out
+	rm -rf $(OBJS) $(TARGET) ./build/*.out $(THIRD-PARTY)
 
-	
+third-party:
+	mkdir third-party
+	git clone https://github.com/Al0den/physics third-party/physics
+	git clone https://github.com/Al0den/neat third-party/neat
+
+

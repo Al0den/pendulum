@@ -1,3 +1,5 @@
+#include <SDL2/SDL.h>
+
 #include "../include/agent.hpp"
 #include "../include/config.hpp"
 #include "../include/utils.hpp"
@@ -111,3 +113,74 @@ void Agent::applyMovement(RigidBodySystem *system, double coeff) {
         head->v_x *= 0.95;
     }
 }
+
+
+void Network::display(int x, int y, int d_width, int d_height, void *renderer_void) {
+    SDL_Renderer *renderer = (SDL_Renderer *)renderer_void;
+    std::vector<neat::Pair> node_positions;
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    int current_x = x;
+    int x_offset = d_width / layers.size();
+    int max_neurons_in_a_layer = 0;
+
+    int neuron_size = 20;
+
+    for (int i=0; i<layers.size(); i++) {
+        if(layers[i].size() > max_neurons_in_a_layer) {
+            max_neurons_in_a_layer = layers[i].size();
+        }
+    }
+    int y_offset = d_height / max_neurons_in_a_layer;
+
+    for(int i=0; i<layers.size(); i++) {
+        int current_y = y + d_height / 2;
+
+        if(layers[i].size() % 2 == 1) {
+            current_y = y + d_height/2 - y_offset * (layers[i].size() - 1) / 2;
+        } else {
+            current_y = y + d_height/2 - y_offset/2 - y_offset * (layers[i].size() - 2) / 2;
+        }
+        for(int j=0; j<layers[i].size(); j++) {
+            int color_grad = (layers[i][j]->out_value + 1)/2 * 255;
+            Pair pair = {layers[i][j], current_x, current_y, color_grad};
+            node_positions.push_back(pair);
+            current_y += y_offset;
+        }
+        current_x += x_offset;
+    }
+
+    for(int i=0; i<connections.size(); i++) {
+        Connection *connection = connections[i];
+        Node *from = (Node *)connection->from;
+        Node *to = (Node *)connection->towards;
+        int from_x = 0;
+        int from_y = 0;
+        int to_x = 0;
+        int to_y = 0;
+        for(int j=0; j<node_positions.size(); j++) {
+            if(node_positions[j].cur_node == from) {
+                from_x = node_positions[j].pos_x + (int)(neuron_size / 2);
+                from_y = node_positions[j].pos_y + (int)(neuron_size / 2);
+            }
+            if(node_positions[j].cur_node == to) {
+                to_x = node_positions[j].pos_x + (int)(neuron_size / 2);
+                to_y = node_positions[j].pos_y + (int)(neuron_size / 2);
+            }
+        }
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderDrawLine(renderer, from_x, from_y, to_x, to_y);
+    }
+    int current_y;
+    current_x = x;
+    for(int i=0; i<node_positions.size(); i++) {
+        Pair pos = node_positions[i];
+        int color_grad = pos.color_grad;
+        current_x = pos.pos_x;
+        current_y = pos.pos_y;
+        SDL_SetRenderDrawColor(renderer, color_grad, 255 - color_grad, 0, 255);
+        SDL_Rect neuron = {current_x, current_y, neuron_size, neuron_size};
+        SDL_RenderFillRect(renderer, &neuron);
+    }
+
+}
+
