@@ -1,0 +1,5 @@
+*.o
+build/*
+third-party/*
+.git
+data/*
