@@ -30,6 +30,7 @@ void train(Environment *env, TrainingInfo *info, TrainingInfo *global_info);
 void nextBatch(Environment *env);
 void resetupAgents(Environment *env);
 void rankAgents(Environment *env);
+void saveBestAgent(Environment *env);
 void saveAgents(Environment *env);
 void setupEnvironment(Environment *env);
 void sanityCheck(Environment *env);

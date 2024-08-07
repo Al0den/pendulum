@@ -2,12 +2,11 @@
 #include "../include/train.hpp"
 #include "../include/utils.hpp"
 
-#include <RenderEngine>
-
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
 #include <assert.h>
+#include <filesystem>
 
 #define noRender false
 
@@ -43,12 +42,18 @@ void *startTraining(void *combo) {
 
 int main() {
     srand(time(NULL));
+    
+    //Create dir data/best, data/generations, data/logs, and data
+    std::filesystem::create_directory("data");
+    std::filesystem::create_directory("data/best");
+    std::filesystem::create_directory("data/generations");
+    std::filesystem::create_directory("data/logs");
+
     std::string input;
     std::cout << "Enter the number of agents: " << std::endl;
     std::cin >> input;
     int num_agents = std::stoi(input);
 
-    
     std::cout << "Generation to load" << std::endl;
     std::cin >> input;
     int generation = std::stoi(input);

@@ -84,6 +84,7 @@ void trainMultiCPU(combo *combos, int num_cores, TrainingInfo *info, Environment
 
     logData(env, info);
     rankAgents(env);
+    saveBestAgent(env);
 
     info->status = env->status;
 
@@ -264,6 +265,19 @@ void nextBatch(Environment *env) {
     std::cout << "\rGenerated next agents    " << std::endl;
 }
 
+void saveBestAgent(Environment *env) {
+    std::cout << "Saved best agent" << std::endl;
+    Agent *best_agent = env->agents[0];
+    std::string serial = best_agent->brain->serialize();
+    std::string path = "data/best/agent_" + std::to_string(env->generation) + ".txt";
+    
+    std::ofstream file(path);
+    file << serial;
+    file.close();
+    std::cout << "\rSaved best agent" << std::endl;
+
+}
+
 void saveAgents(Environment *env) {
     std::cout << "Saving generated agents...";
     assert (env->status = STATUS_MUTATED);
@@ -283,7 +297,7 @@ void saveAgents(Environment *env) {
 void setupEnvironment(Environment *env) {
     env->safety->lock();
     assert (env->status == STATUS_UNTRAINED);
-    RandomDoubleGenerator rdg(0, M_PI * 2);
+    RandomDoubleGenerator rdg(M_PI * 4 /3, M_PI * 5/3);
     env->createSystem();
     for(int i=0; i<env->agents.size(); i++) {
         Agent *agent = env->agents[i];

@@ -2,8 +2,7 @@
 
 #include "../include/agent.hpp"
 #include "../third-party/physics/include/PhysicsEngine"
-
-#include <RenderEngine> 
+#include "../third-party/RenderEngine/include/RenderEngine"
 
 #define STATUS_UNTRAINED 0 //Agents that were loaded from a file/just created
 #define STATUS_TRAINING 1 //Currently undergoing training

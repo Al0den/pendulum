@@ -82,9 +82,9 @@ void Agent::updateScore(RigidBodySystem *system) {
         if(theta < 0) {
             theta += 2 * M_PI;
         }
-        double target = M_PI / 2;
-        double diff = abs(theta - target) * 180 / M_PI;
-        if(diff > 30) {
+        double degrees = theta * 180 / M_PI;
+
+        if(degrees > 120 || degrees < 60) {
             in_a_row = 0;
             return;
         }
@@ -94,7 +94,7 @@ void Agent::updateScore(RigidBodySystem *system) {
 
     //double theta_dot = sqrt(end->v_x * end->v_x + end->v_y * end->v_y) / params->pendulum_length;
     in_a_row += 1;
-    fitness += sqrt(in_a_row) * params->update_dt;
+    fitness += params->update_dt;
 }
 
 void Agent::applyMovement(RigidBodySystem *system, double coeff) {

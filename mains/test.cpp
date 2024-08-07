@@ -1,7 +1,7 @@
 #include "../include/environment.hpp"
 #include "../include/utils.hpp"
 
-#include <RenderEngine>
+#include "../third-party/RenderEngine/include/RenderEngine"
 
 #include <unistd.h>
 #include <chrono>
@@ -11,7 +11,7 @@
 
 Environment *env;
 bool pressed = false;
-
+ 
 int keyInfo[4] = {0, 0, 0, 0};
 
 void custom_overlap(SDL_Renderer *renderer, SDL_Window *window) {
